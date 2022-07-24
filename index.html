@@ -1,0 +1,97 @@
+<style>
+  .almost {
+    color: orange;
+  }
+  .success {
+    color: green;
+  }
+  .char {
+    display: inline-block;
+  }
+</style>
+<div>Combo Challenge</div>
+<div><input type="text" id="user-guess" /></div>
+<div>
+  <button onclick="handleClick()">
+    submit
+  </button>
+</div>
+<div id="results">
+  <!-- <div>246</div> -->
+  <div>
+    <div class="char">1</div>
+    <div class="char almost">2</div>
+    <div class="char">3</div>
+  </div>
+  <div>
+    <div class="char almost">4</div>
+    <div class="char">5</div>
+    <div class="char success">6</div>
+  </div>
+</div>
+<script>
+  let combo = "246";
+  function render(output) {
+    let resultsElem = document.getElementById("results");
+    resultsElem.innerHTML = output;
+  }
+  // function that takes a guess as a parameter
+  function renderGuess(guess) {
+    let numbers = guess.split("");
+    // use map to interate over each letter
+    let renderedGuess = numbers.map(function ourMap(num, index) {
+      console.log("num", num, index);
+
+      // choose what class to apply
+      // initialize a variable called className with char only
+      let className = "char";
+      // if they got this letter right but wrong position
+      console.log("almost", combo.includes(num));
+      if (combo.includes(num)) {
+        // then add almost
+        className = "char almost";
+      }
+      // if the got this right
+      console.log("success", combo[index] === num);
+      if (combo[index] === num) {
+        // then add success
+        className = "char success";
+      }
+      console.log(className);
+
+      // make a div with the char class for each letter
+      let newElement = "<div class='" + className + "'>" + num + "</div>";
+      // console.log("newElement", newElement);
+      return newElement;
+    });
+    let thereBeNoCommas = renderedGuess.join("");
+    return thereBeNoCommas;
+  }
+  let guesses = [];
+  function onFailure(userGuess) {
+    guesses.push(userGuess);
+    let guessElements = guesses.map(function ourMap(guess) {
+      // console.log("GUESS", guess);
+      // get the rendered guess
+      let renderedGuess = renderGuess(guess);
+      // log the new rendered guess
+      // console.log("rendered guess", renderedGuess);
+      let newElement = "<div>" + renderedGuess + "</div>";
+      return newElement;
+    });
+    let thereBeNoCommas = guessElements.join("");
+    render(thereBeNoCommas);
+  }
+  function onSuccess() {
+    render("YAY! you win!");
+  }
+  function handleClick() {
+    let userGuess = document.getElementById("user-guess").value;
+
+    if (combo === userGuess) {
+      onSuccess();
+    } else {
+      onFailure(userGuess);
+    }
+  }
+</script>
